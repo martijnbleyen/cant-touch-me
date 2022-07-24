@@ -1,0 +1,16 @@
+body,html{
+	margin:0;
+	padding:0;
+}
+
+
+.block{
+	position:absolute;
+	left:50%;
+	width:100px;
+	height:100px;
+	top: 50%;
+	margin-left:-50px;
+	margin-top:-50px;
+	background:#ff99ff;
+}
