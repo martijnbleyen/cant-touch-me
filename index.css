@@ -8,9 +8,34 @@ body,html{
 	position:absolute;
 	left:50%;
 	width:100px;
-	height:100px;
+	height:50px;
 	top: 50%;
 	margin-left:-50px;
-	margin-top:-50px;
+	margin-top:-25px;
+	background:red;
+	z-index:3;
+	border-radius:5px;
+	transition:all .3s ease-in-out;
+}
+.block:before{
+	content:'';
+	position:absolute;
+	left:50%;
+	top: 50%;
+	width:200px;
+	height:150px;
+	transform:translate(-50%,-50%);
 	background:#ff99ff;
+	z-index:-1;
+	opacity:.2;
+	border-radius:5px;
+}
+
+.anim-block{
+	width:100px;
+	height:100px;
+	position:absolute;
+	left:0;
+	top:0;
+	background:#000;
 }
