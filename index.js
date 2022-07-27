@@ -3,29 +3,48 @@ const basePos = el.getBoundingClientRect();
 const pos = el.getBoundingClientRect();
 const boundry = 50;
 
+const ball = document.getElementById("ball");
+
+const lerp = (x, y, a) => x * (1 - a) + y * a;
+
+
+let oldX = 0;
+let oldY = 0;
 window.addEventListener("mousemove", (e) => {
     // console.log(e);
     // console.log(el.getBoundingClientRect());
+    // const mousePos = { x: e.clientX, y: e.clientY };
+    // const yPos = basePos.y - mousePos.y;
+    // const xPos = basePos.x - mousePos.x;
+
+    // const xClose = xPos < boundry && xPos > -(pos.width + boundry);
+    // const yClose = yPos < boundry && yPos > -(pos.height + boundry);
+    // const isClose = xClose && yClose;
+
+    // // console.log({ yPos, xPos });
+    // if (!isClose) {
+    //     el.style.backgroundColor = "red";
+    // } else {
+    //     el.style.backgroundColor = "green";
+    // }
+
+    // if (isClose) {
+    //     el.style.transform = "translate(" + (boundry - xPos) + "px," + (boundry - yPos) + "px)";
+    // } else {
+    //     el.style.transform = "translate(0,0)";
+    // }
+
     const mousePos = { x: e.clientX, y: e.clientY };
-    const yPos = basePos.y - mousePos.y;
-    const xPos = basePos.x - mousePos.x;
+    requestAnimationFrame( () => {
 
-    const xClose = xPos < boundry && xPos > -(pos.width + boundry);
-    const yClose = yPos < boundry && yPos > -(pos.height + boundry);
-    const isClose = xClose && yClose;
+        // ball.style.left = lerp(oldX , (mousePos.x - ball.offsetWidth/2) , 0.1) + "px";    
+        // ball.style.top = lerp(oldY , (mousePos.y - ball.offsetHeight/2) , 0.00001) + "px";    
+        ball.style.left = lerp((mousePos.x - ball.offsetWidth/2), oldX , 0.1) + "px";    
+        ball.style.top = lerp((mousePos.y - ball.offsetHeight/2) , oldY , 0.00001) + "px";    
+        oldX = (mousePos.x - ball.offsetWidth/2);
+        oldY = (mousePos.y - ball.offsetHeight/2);
+    });
 
-    // console.log({ yPos, xPos });
-    if (!isClose) {
-        el.style.backgroundColor = "red";
-    } else {
-        el.style.backgroundColor = "green";
-    }
-
-    if (isClose) {
-        el.style.transform = "translate(" + (boundry - xPos) + "px," + (boundry - yPos) + "px)";
-    } else {
-        el.style.transform = "translate(0,0)";
-    }
 });
 
 function animate({ timing, draw, duration }) {
