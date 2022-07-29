@@ -1,132 +1,110 @@
-const el = document.getElementById("block");
-const basePos = el.getBoundingClientRect();
-const pos = el.getBoundingClientRect();
-const boundry = 50;
-
 const ball = document.getElementById("ball");
+const ballWrap = document.getElementById("ballWrap");
+const bgBall = document.getElementById("bgBall");
 
-const lerp = (x, y, a) => x * (1 - a) + y * a;
+const basePos = ball.getBoundingClientRect();
 
+const radius = 100;
+const ballSize = 10;
 
-let oldX = 0;
-let oldY = 0;
+function toRadians(angle) {
+    return angle * (Math.PI / 180);
+}
+
+function toDegrees(angle) {
+    return angle * (180 / Math.PI);
+}
+
+const line = document.createElement("div");
+line.style.width = "100px";
+line.style.height = "1px";
+line.style.background = "salmon";
+line.style.position = "absolute";
+line.style.top = "50%";
+line.style.left = "50%";
+line.style.zIndex = "50";
+line.style.transform = "rotate(-135deg)";
+line.style.transformOrigin = "left center";
+document.body.appendChild(line);
+
 window.addEventListener("mousemove", (e) => {
     // console.log(e);
     // console.log(el.getBoundingClientRect());
-    // const mousePos = { x: e.clientX, y: e.clientY };
-    // const yPos = basePos.y - mousePos.y;
-    // const xPos = basePos.x - mousePos.x;
+    const mousePos = { x: e.clientX, y: e.clientY };
+    const yPos = basePos.y + basePos.height / 2 - mousePos.y;
+    const xPos = basePos.x + basePos.width / 2 - mousePos.x;
+    const diagonal = Math.sqrt(Math.pow(xPos, 2) + Math.pow(yPos, 2));
+
+    const angle = toDegrees(Math.atan2(yPos, xPos));
+    console.log({ xPos, yPos, diagonal, angle });
 
     // const xClose = xPos < boundry && xPos > -(pos.width + boundry);
     // const yClose = yPos < boundry && yPos > -(pos.height + boundry);
     // const isClose = xClose && yClose;
+    requestAnimationFrame(() => {
+        if (diagonal > radius) {
+            line.style.backgroundColor = "salmon";
+            bgBall.style.backgroundColor = "#ff99ff";
+        } else {
+            line.style.backgroundColor = "green";
+            bgBall.style.backgroundColor = "#99ff99";
+        }
 
-    // // console.log({ yPos, xPos });
-    // if (!isClose) {
-    //     el.style.backgroundColor = "red";
-    // } else {
-    //     el.style.backgroundColor = "green";
-    // }
-
-    // if (isClose) {
-    //     el.style.transform = "translate(" + (boundry - xPos) + "px," + (boundry - yPos) + "px)";
-    // } else {
-    //     el.style.transform = "translate(0,0)";
-    // }
-
-    const mousePos = { x: e.clientX, y: e.clientY };
-    requestAnimationFrame( () => {
-
-        // ball.style.left = lerp(oldX , (mousePos.x - ball.offsetWidth/2) , 0.1) + "px";    
-        // ball.style.top = lerp(oldY , (mousePos.y - ball.offsetHeight/2) , 0.00001) + "px";    
-        ball.style.left = lerp((mousePos.x - ball.offsetWidth/2), oldX , 0.1) + "px";    
-        ball.style.top = lerp((mousePos.y - ball.offsetHeight/2) , oldY , 0.00001) + "px";    
-        oldX = (mousePos.x - ball.offsetWidth/2);
-        oldY = (mousePos.y - ball.offsetHeight/2);
+        line.style.width = diagonal + "px";
+        line.style.transform = "rotate(" + (angle - 180) + "deg)";
     });
-
 });
 
-function animate({ timing, draw, duration }) {
-    let start = performance.now();
+// for (let i = 0; i < 360; i += 15) {
+//     let degrees = i;
+//     let xCord = Math.cos(toRadians(degrees)) * radius;
+//     let yCord = Math.sin(toRadians(degrees)) * radius;
+//     console.log({ degrees, xCord, yCord });
 
-    requestAnimationFrame(function animate(time) {
-        // timeFraction goes from 0 to 1
-        let timeFraction = (time - start) / duration;
-        if (timeFraction > 1) timeFraction = 1;
+//     let el = document.createElement("div");
+//     el.style.position = "absolute";
+//     el.style.width = ballSize + "px";
+//     el.style.height = ballSize + "px";
+//     el.style.opacity = "0.3";
+//     el.style.marginLeft = radius - ballSize / 2 + "px";
+//     el.style.marginTop = radius - ballSize / 2 + "px";
+//     el.style.borderRadius = "50%";
+//     el.style.backgroundColor = "salmon";
+//     el.style.left = xCord + "px";
+//     el.style.top = yCord + "px";
+//     ballWrap.appendChild(el);
+// }
 
-        // calculate the current animation state
-        let progress = timing(timeFraction);
-        console.log({ progress });
+// const xLine = document.createElement("div");
+// xLine.style.width = "100vw";
+// xLine.style.height = "1px";
+// xLine.style.background = "red";
+// xLine.style.position = "absolute";
+// xLine.style.top = "50%";
+// document.body.appendChild(xLine);
 
-        draw(progress); // draw it
+// const yLine = document.createElement("div");
+// yLine.style.width = "1px";
+// yLine.style.height = "100vh";
+// yLine.style.background = "red";
+// yLine.style.position = "absolute";
+// yLine.style.left = "50%";
+// document.body.appendChild(yLine);
 
-        if (timeFraction < 1) {
-            requestAnimationFrame(animate);
-        }
-    });
-}
+// const crossLine1 = document.createElement("div");
+// crossLine1.style.width = "1px";
+// crossLine1.style.height = "100vh";
+// crossLine1.style.background = "red";
+// crossLine1.style.position = "absolute";
+// crossLine1.style.left = "50%";
+// crossLine1.style.transform = "rotate(45deg)";
+// document.body.appendChild(crossLine1);
 
-function makeEaseOut(timing) {
-    return function (timeFraction) {
-        return 1 - timing(1 - timeFraction);
-    };
-}
-
-function quad(timeFraction) {
-    return Math.pow(timeFraction, 2);
-}
-function circ(timeFraction) {
-    return 1 - Math.sin(Math.acos(timeFraction));
-}
-function bounce(timeFraction) {
-    for (let a = 0, b = 1; 1; a += b, b /= 2) {
-        if (timeFraction >= (7 - 4 * a) / 11) {
-            return -Math.pow((11 - 6 * a - 11 * timeFraction) / 4, 2) + Math.pow(b, 2);
-        }
-    }
-}
-const animBlock = document.getElementById("amimBlock");
-// setTimeout(() => {
-//     animate(
-//         {
-//             duration: 1000,
-//             // timing: quad,
-//             timing: circ,
-//             draw: (progress) => {
-//                 console.log(progress);
-//                 animBlock.style.top = progress * 100 + "%";
-//                 animBlock.style.transform = "translateY(" + progress * -100 + "px)";
-//             },
-//         },
-//         1000
-//     );
-// }, 1000);
-
-const blockCount = 200;
-const windowWidth = window.innerWidth;
-const blockSize = windowWidth / blockCount;
-for (let i = 0; i < blockCount; i++) {
-    const block = document.createElement("div");
-    block.classList.add("anim-block");
-    block.style.width = blockSize + "px";
-    block.style.height = blockSize + "px";
-    block.style.left = i * blockSize + "px";
-    block.style.top = "0px";
-    document.body.appendChild(block);
-
-    setTimeout(() => {
-        animate(
-            {
-                duration: 1000,
-                // timing: quad,
-                timing: makeEaseOut(circ),
-                draw: (progress) => {
-                    block.style.top = progress * 100 + "%";
-                    // block.style.transform = "translateY(" + progress * - blockSize + "px)";
-                },
-            },
-            1000
-        );
-    }, (i * 3) + 1000);
-}
+// const crossLine2 = document.createElement("div");
+// crossLine2.style.width = "1px";
+// crossLine2.style.height = "100vh";
+// crossLine2.style.background = "red";
+// crossLine2.style.position = "absolute";
+// crossLine2.style.left = "50%";
+// crossLine2.style.transform = "rotate(-45deg)";
+// document.body.appendChild(crossLine2);
