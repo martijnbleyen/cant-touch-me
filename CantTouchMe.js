@@ -7,7 +7,6 @@ export default class CantTouchMe {
         this.basePos = this.el.getBoundingClientRect();
         this.elW = this.basePos.width;
         this.elH = this.basePos.height;
-        this.baseBgColor = this.el.style.backgroundColor;
 
         this.setOptions(options);
 
@@ -26,7 +25,6 @@ export default class CantTouchMe {
     }
 
     check(mousePos) {
-        // console.log("CHECKING", this);
         const basePos = this.basePos;
         const yPos = basePos.y + basePos.height / 2 - mousePos.y;
         const xPos = basePos.x + basePos.width / 2 - mousePos.x;
@@ -35,23 +33,17 @@ export default class CantTouchMe {
         const radius = Math.abs(yPos) <= this.elH ? this.radiusX : this.radiusY;
 
         const angle = toDegrees(Math.atan2(yPos, xPos));
-        // console.log({ xPos, yPos, diagonal, angle });
-        const ballX = (radius - diagonal) * Math.cos(toRadians(angle));
-        const ballY = (radius - diagonal) * Math.sin(toRadians(angle));
+        const elX = (radius - diagonal) * Math.cos(toRadians(angle));
+        const elY = (radius - diagonal) * Math.sin(toRadians(angle));
         requestAnimationFrame(() => {
             if (diagonal > radius) {
-                // this.el.style.transform = `translate(0px, 0px)`;
-                // this.el.animate({ transform: "translate(0px, 0px)" }, { duration: 300, iterations: 1 });
                 const anim = this.el.animate({ transform: "translate(0px, 0px)" }, { duration: 100, iterations: 1 });
                 anim.commitStyles();
 
-                this.el.style.backgroundColor = this.baseBgColor;
                 this.el.style.zIndex = "unset";
             } else {
-                // this.el.style.transform = `translate(${ballX}px, ${ballY}px)`;
-                const anim = this.el.animate({ transform: `translate(${ballX}px, ${ballY}px)` }, { duration: 100, iterations: 1 });
+                const anim = this.el.animate({ transform: `translate(${elX}px, ${elY}px)` }, { duration: 100, iterations: 1 });
                 anim.commitStyles();
-                this.el.style.backgroundColor = this.options.bgColor;
                 this.el.style.zIndex = 4;
             }
         });
@@ -71,10 +63,7 @@ export default class CantTouchMe {
 
         window.addEventListener("mousemove", (e) => {
             const mousePos = { x: e.clientX, y: e.clientY };
-            // console.log("MOUSE", mousePos);
-            // console.log(this.elements);
             this.elements.forEach((el) => {
-                // console.log({el});
                 el.check(mousePos);
             });
         });
