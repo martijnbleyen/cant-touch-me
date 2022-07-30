@@ -1,5 +1,5 @@
 # Can't touch me
-This class wil make any dom element untouchable.
+This class wil make (almost) any dom element untouchable.
 
 ## Usage
 
@@ -7,3 +7,10 @@ This class wil make any dom element untouchable.
 import CantTouchMe from "cant-touch-me";
 const ctm = new CantTouchMe( document.getElementById("element") );
 ```
+
+## Limitations
+This class uses transform to update the position so this can't be used on elements that already use transform in any way.
+
+## Todo list
+- [ ] Add resize support
+- [ ] Add customization options
