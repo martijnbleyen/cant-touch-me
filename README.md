@@ -14,3 +14,4 @@ This class uses transform to update the position so this can't be used on elemen
 ## Todo list
 - [ ] Add resize support
 - [ ] Add customization options
+- [ ] Add Typescript support if there are custom options
