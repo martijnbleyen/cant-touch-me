@@ -1,5 +1,5 @@
 # Can't touch me
-This class wil make (almost) any dom element untouchable.
+This class wil make (almost) any dom element untouchable with the mouse.
 
 ## Usage
 
