@@ -1,6 +1,6 @@
 {
   "name": "cant-touch-me",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Class that will make any dom element untouchable.",
   "main": "index.js",
   "directories": {
