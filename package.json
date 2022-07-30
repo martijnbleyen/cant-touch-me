@@ -1,0 +1,30 @@
+{
+  "name": "cant-touch-me",
+  "version": "1.0.0",
+  "description": "Class that will make any dom element untouchable.",
+  "main": "index.js",
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/martijnbleyen/cant-touch-me.git"
+  },
+  "keywords": [
+    "dom",
+    "js",
+    "utility",
+    "evade",
+    "untouchable",
+    "domelement"
+  ],
+  "author": "Martijn Bleyen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/martijnbleyen/cant-touch-me/issues"
+  },
+  "homepage": "https://github.com/martijnbleyen/cant-touch-me#readme"
+}

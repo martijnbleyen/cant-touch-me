@@ -1,48 +1,71 @@
-import CantTouchMe from "./CantTouchMe.js";
+import { toDegrees, toRadians } from "./utils.js";
 
-const el = document.getElementById("ball");
-const ctm = new CantTouchMe(el);
+export default class CantTouchMe {
+    constructor(el, options = {}) {
+        this.el = el;
 
-// makeElement(100, 100, 100);
+        this.basePos = this.el.getBoundingClientRect();
+        this.elW = this.basePos.width;
+        this.elH = this.basePos.height;
 
-// const size = 100;
-// const maxX = Math.ceil(window.innerWidth / size);
-// const maxY = Math.ceil(window.innerHeight / size);
+        this.setOptions(options);
 
-// const allElements = [];
-// for (let i = 0; i < maxY; i++) {
-//     const y = i * size;
-//     for (let j = 0; j < maxX; j++) {
-//         const x = j * size;
-//         makeElement(size, x, y);
-//     }
-// }
+        CantTouchMe.init();
+        CantTouchMe.add(this);
+    }
 
-// function makeElement(size, x, y) {
-//     const el = document.createElement("div");
-//     el.style.width = size + "px";
-//     el.style.height = size + "px";
-//     el.style.border = "1px solid rgba(255,255,255,0.2)";
-//     // el.style.borderRadius = "50%";
-//     el.style.backgroundColor = "#000";
-//     el.style.position = "absolute";
-//     el.style.left = x + "px";
-//     el.style.top = y + "px";
-//     document.body.appendChild(el);
-//     const radius = Math.random() * 150 + 400;
-//     const ctm = new CantTouchMe(el, { radiusPerc: radius , bgColor : "#9999ff" });
-//     allElements.push(ctm);
-//     return el;
-// }
+    setOptions(options) {
+        this.options = {
+            radiusPerc: 125,
+            ...options,
+        };
 
-// function resizeRadius() {
-//     allElements.forEach((el) => {
-//         const radius = Math.random() * 500 + 200;
-//         el.setOptions({ radiusPerc: radius });
-//     });
-//     setTimeout(() => {
-//         resizeRadius();
-//     }, 2000);
-// }
+        this.radiusX = ((this.elW / 2) * this.options.radiusPerc) / 100;
+        this.radiusY = ((this.elH / 2) * this.options.radiusPerc) / 100;
+    }
 
-// resizeRadius();
+    check(mousePos) {
+        const basePos = this.basePos;
+        const yPos = basePos.y + basePos.height / 2 - mousePos.y;
+        const xPos = basePos.x + basePos.width / 2 - mousePos.x;
+        const diagonal = Math.sqrt(Math.pow(xPos, 2) + Math.pow(yPos, 2));
+
+        const radius = Math.abs(yPos) <= this.elH ? this.radiusX : this.radiusY;
+
+        const angle = toDegrees(Math.atan2(yPos, xPos));
+        const elX = (radius - diagonal) * Math.cos(toRadians(angle));
+        const elY = (radius - diagonal) * Math.sin(toRadians(angle));
+        requestAnimationFrame(() => {
+            if (diagonal > radius) {
+                const anim = this.el.animate({ transform: "translate(0px, 0px)" }, { duration: 100, iterations: 1 });
+                anim.commitStyles();
+
+                this.el.style.zIndex = "unset";
+            } else {
+                const anim = this.el.animate({ transform: `translate(${elX}px, ${elY}px)` }, { duration: 100, iterations: 1 });
+                anim.commitStyles();
+                this.el.style.zIndex = 4;
+            }
+        });
+    }
+
+    static elements = [];
+    static isInitialized = false;
+
+    static add(el) {
+        this.elements.push(el);
+    }
+
+    static init() {
+        if (CantTouchMe.isInitialized) return;
+
+        CantTouchMe.isInitialized = true;
+
+        window.addEventListener("mousemove", (e) => {
+            const mousePos = { x: e.clientX, y: e.clientY };
+            this.elements.forEach((el) => {
+                el.check(mousePos);
+            });
+        });
+    }
+}
