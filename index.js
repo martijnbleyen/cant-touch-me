@@ -1,10 +1,10 @@
 const ball = document.getElementById("ball");
 const ballWrap = document.getElementById("ballWrap");
-const bgBall = document.getElementById("bgBall");
+// const bgBall = document.getElementById("bgBall");
 
 const basePos = ball.getBoundingClientRect();
 
-const radius = 100;
+const radius = Math.max(basePos.width , basePos.height);
 const ballSize = 10;
 
 function toRadians(angle) {
@@ -15,17 +15,17 @@ function toDegrees(angle) {
     return angle * (180 / Math.PI);
 }
 
-const line = document.createElement("div");
-line.style.width = "100px";
-line.style.height = "1px";
-line.style.background = "salmon";
-line.style.position = "absolute";
-line.style.top = "50%";
-line.style.left = "50%";
-line.style.zIndex = "50";
-line.style.transform = "rotate(-135deg)";
-line.style.transformOrigin = "left center";
-document.body.appendChild(line);
+// const line = document.createElement("div");
+// line.style.width = "100px";
+// line.style.height = "1px";
+// line.style.background = "salmon";
+// line.style.position = "absolute";
+// line.style.top = "50%";
+// line.style.left = "50%";
+// line.style.zIndex = "50";
+// line.style.opacity = 0;
+// line.style.transformOrigin = "left center";
+// document.body.appendChild(line);
 
 window.addEventListener("mousemove", (e) => {
     // console.log(e);
@@ -37,21 +37,26 @@ window.addEventListener("mousemove", (e) => {
 
     const angle = toDegrees(Math.atan2(yPos, xPos));
     console.log({ xPos, yPos, diagonal, angle });
+    const ballX = (radius - diagonal) * Math.cos(toRadians(angle));
+    const ballY = (radius - diagonal) * Math.sin(toRadians(angle));
+    console.log({ xPos, yPos, diagonal, angle });
 
     // const xClose = xPos < boundry && xPos > -(pos.width + boundry);
     // const yClose = yPos < boundry && yPos > -(pos.height + boundry);
     // const isClose = xClose && yClose;
     requestAnimationFrame(() => {
         if (diagonal > radius) {
-            line.style.backgroundColor = "salmon";
-            bgBall.style.backgroundColor = "#ff99ff";
+            // line.style.backgroundColor = "salmon";
+            // bgBall.style.backgroundColor = "#ff99ff";
+            ball.style.transform = `translate(0px, 0px)`;
         } else {
-            line.style.backgroundColor = "green";
-            bgBall.style.backgroundColor = "#99ff99";
+            ball.style.transform = `translate(${ballX}px, ${ballY}px)`;
+            // line.style.backgroundColor = "green";
+            // bgBall.style.backgroundColor = "#99ff99";
         }
 
-        line.style.width = diagonal + "px";
-        line.style.transform = "rotate(" + (angle - 180) + "deg)";
+        // line.style.width = diagonal + "px";
+        // line.style.transform = "rotate(" + (angle - 180) + "deg)";
     });
 });
 
