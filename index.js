@@ -48,10 +48,13 @@ window.addEventListener("mousemove", (e) => {
         if (diagonal > radius) {
             // line.style.backgroundColor = "salmon";
             // bgBall.style.backgroundColor = "#ff99ff";
+            ball.style.backgroundColor = "#101261";
             ball.style.transform = `translate(0px, 0px)`;
+            ball.innerText = "Click here 😉";
         } else {
             ball.style.transform = `translate(${ballX}px, ${ballY}px)`;
-            // line.style.backgroundColor = "green";
+            ball.style.backgroundColor = "#ba112a";
+            ball.innerText = "Can't touch me 🖕";
             // bgBall.style.backgroundColor = "#99ff99";
         }
 
