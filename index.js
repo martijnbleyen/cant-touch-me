@@ -39,12 +39,9 @@ export default class CantTouchMe {
             if (diagonal > radius) {
                 const anim = this.el.animate({ transform: "translate(0px, 0px)" }, { duration: 100, iterations: 1 });
                 anim.commitStyles();
-
-                this.el.style.zIndex = "unset";
             } else {
                 const anim = this.el.animate({ transform: `translate(${elX}px, ${elY}px)` }, { duration: 100, iterations: 1 });
                 anim.commitStyles();
-                this.el.style.zIndex = 4;
             }
         });
     }
